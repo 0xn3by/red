@@ -88,7 +88,7 @@ technical severity of the defect, not the exposure of this box.
 
 | # | Title | API Top 10 | CVSS 3.1 | Severity | Status |
 |---|-------|-----------|----------|----------|--------|
-| _No findings recorded yet._ |
+| F-001 | IDOR on order details via `order_id` | API1 BOLA | 6.5 | Medium | Confirmed |
 
 ---
 
@@ -96,6 +96,21 @@ technical severity of the defect, not the exposure of this box.
 
 _Fixed template per finding. Nothing added until confirmed with evidence in
 `evidence.md`._
+
+### F-001
+
+| Field | |
+|-------|--|
+| **Title** | IDOR on order details — any user reads any order via `order_id` |
+| **API Top 10** | API1 Broken Object Level Authorization |
+| **Severity** | 6.5 Medium — `CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N` |
+| **Affected** | GET `/workshop/api/shop/orders/{id}` (UI route `/orders?order_id=`) |
+| **Description** | The order-details endpoint returns any order by integer ID without checking ownership. IDs are sequential, so all orders are enumerable. |
+| **Steps to repro** | 1. Log in as attacker (`ram`). 2. View own order `order_id=6` → billed to `ram123@gmail.com` (baseline). 3. Decrement to `order_id=5` → returns order billed to `admin@example.com`, a different user. |
+| **Evidence** | UI screenshots (same `ram` session): `order_id=6` = ram's order; `order_id=5` = `admin@example.com`, phone `9010203040`, item Seat, $20. Raw API request/response: see `evidence.md` → F-001. |
+| **Impact** | An authenticated user can read every customer's order details — email, phone, items, amounts — by enumerating IDs. |
+| **Root cause** | No object-level authorization: the handler does not verify the order belongs to the requesting user. |
+| **Remediation** | Enforce ownership server-side (`order.user == request.user`, else 403/404). Do not rely on sequential integer IDs for access control. |
 
 <!--
 ### F-00X
