@@ -28,7 +28,7 @@ discovered.
 
 | Method | Path | ID type | Auth | Who should be allowed | Status |
 |--------|------|---------|------|-----------------------|--------|
-| GET  | `/workshop/api/shop/orders/{id}` | int | Yes | Owner of the order | untested |
+| GET  | `/workshop/api/shop/orders/{id}` | int | Yes | Owner of the order | finding (F-001) |
 | GET  | `/workshop/api/shop/orders/all` | none | Yes | Admin / privileged role | untested |
 | POST | `/workshop/api/shop/orders/return_order?order_id={id}` | int | Yes | Owner of the order | untested |
 | GET  | `/workshop/api/mechanic/mechanic_report?report_id={id}` | int | Yes | Mechanic assigned / owner | untested |
