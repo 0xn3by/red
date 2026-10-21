@@ -52,10 +52,14 @@ GET ...?filename=report_5   (SAME ram token)
 
 ## F-005 — Negative order quantity → account credit
 
-- `2026-10-21T08:18–08:21` · attacker `ram` · POST `/workshop/api/shop/orders` (credit read via GET `/workshop/api/shop/products`)
-- Model: `charge = price × quantity`; `quantity=-1, price=10 → charge=-10 → credit +10`.
-- Before: `"credit":100.0` (`1-credit-100-before.png`). After order #1177: `"credit":110.0` (`2-credit-110-after.png`).
-- +10 after a purchase is anomalous. **Gap:** order body showing `quantity=-1` not captured; mechanism inferred.
+- `2026-10-21T08:20` · attacker `ram` (RS256) · POST `/workshop/api/shop/orders`
+- Baseline credit `100.0` (`1-credit-100-before.png`).
+```http
+POST /workshop/api/shop/orders   Authorization: Bearer eyJhbGciOiJSUzI1NiJ9... (ram)
+{"product_id":2,"quantity":-1}
+→ 200 OK  {"id":9,"message":"Order sent successfully.","credit":110.0}
+```
+- `quantity=-1` on a $10 item (product_id 2) → charge −10 → credit `100 → 110`. Mechanism confirmed (not inferred). Screenshots: `3-order-body-quantity-neg1.png`, `2-credit-110-after.png`.
 
 ## F-006 — NoSQL operator injection (coupon)
 
@@ -64,7 +68,8 @@ GET ...?filename=report_5   (SAME ram token)
 POST /community/api/v2/coupon/validate-coupon   {"coupon_code":{"$ne":"x"}}
 → 200  {"coupon_code":"TRAC075","amount":"75","CreatedAt":"2026-10-20T16:16:36.835Z"}
 ```
-- Operator object returns a valid coupon → untyped input in Mongo query (C:H). Integrity (redemption) not captured. `1-coupon-ne-injection.png`
+- Operator object returns a valid coupon → untyped input in Mongo query. `1-coupon-ne-injection.png`
+- Redemption (as `patrick`): balance `$100` → apply `TRAC075` ("Coupon applied") → `$175` (+75). Proves recovered coupon converts to credit (I:H). Screenshots: `2-balance-100-before.png`, `3-coupon-applied-success.png`, `4-balance-175-after.png`.
 
 ## F-007 — SSRF via `mechanic_api` + token leak
 
