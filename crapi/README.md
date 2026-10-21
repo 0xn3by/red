@@ -76,14 +76,14 @@ report.md / report.pdf   -- finding template, CVSS, root cause, remediation
 | F-004 | Unauthorized report download via predictable `filename` | API1 BOLA | 6.5 | Medium |
 | F-005 | Negative order quantity increases account credit | API6 Business Flows | 6.5 | Medium |
 | F-006 | NoSQL operator injection in coupon validation | CWE-943 (API8:2019) | 8.1 | High |
-| F-007 | SSRF via `mechanic_api` with bearer-token leak | API7 SSRF | 8.5 | High |
+| F-007 | SSRF via `mechanic_api` with bearer-token leak | API7 SSRF | 7.7 | High |
 
 Full write-ups, evidence, and remediation are in [`report.md`](report.md) and the rendered [`report.pdf`](report.pdf).
 
 ## Key Findings
 
 - **F-003 · JWT `alg:none` (Critical, 9.1)** — the identity service accepts unsigned `{"alg":"none"}` tokens and trusts the `sub` claim, so a forged token returns any user's account; demonstrated by minting a token for a victim email and reading their dashboard.
-- **F-007 · SSRF (High, 8.5)** — `contact_mechanic` issues a server-side request to an attacker-supplied `mechanic_api` URL and forwards the caller's `Authorization` bearer token, confirmed by an out-of-band callback from the internal app container.
+- **F-007 · SSRF (High, 7.7)** — `contact_mechanic` issues a server-side request to an attacker-supplied `mechanic_api` URL and forwards the caller's `Authorization` bearer token, confirmed by an out-of-band callback from the internal app container.
 - **F-006 · NoSQL injection (High, 8.1)** — `coupon_code` reaches a MongoDB query without type validation; a `{"$ne":"x"}` operator bypasses exact match and returns a valid coupon.
 - **F-001 / F-002 / F-004 · BOLA (Medium, 6.5 each)** — order details, mechanic reports, and report PDFs are returned by sequential integer ID or predictable filename with no ownership check, exposing other users' PII and VINs.
 - **F-005 · Negative-quantity credit (Medium, 6.5)** — the order flow computes `charge = price × quantity` without rejecting non-positive quantities, so a negative quantity increases account credit.
