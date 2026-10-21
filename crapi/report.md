@@ -1,14 +1,14 @@
 # crAPI API Penetration Test — Assessment Report
 
-> **Status:** Draft — findings added as they are confirmed with evidence.
+> **Status:** v1.0 — 7 confirmed findings.
 > **Assessor:** Akash Govind
-> **Report date:** 2026-10-20
+> **Report date:** 2026-10-21
 
 ---
 
 ## 1. Executive Summary
 
-_Written last. Max 5 sentences: posture, counts by severity, dominant themes._
+Testing the self-hosted crAPI instance against the OWASP API Security Top 10 (2023) produced seven confirmed findings: one Critical, two High, and four Medium. The Critical is a JWT `alg:none` authentication bypass (F-003) that lets an attacker forge a session for any user, collapsing the identity model. Authorization is broken systemically — three independent BOLA issues (F-001, F-002, F-004) expose other users' orders and service reports, including PII and VINs, by enumerating sequential IDs or filenames. Server-side request forgery (F-007) also makes the API leak a valid bearer token to an attacker-controlled host, NoSQL operator injection (F-006) bypasses coupon validation, and a negative-quantity order flaw (F-005) grants free account credit. The dominant themes are missing object-level authorization and unverified trust in client-supplied data — tokens, URLs, and query values; all CVSS scores assume a production deployment.
 
 | Severity | Count |
 |----------|-------|
