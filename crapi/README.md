@@ -5,7 +5,7 @@
   OWASP crAPI instance, with reproducible evidence and CVSS 3.1 scoring.
 </p>
 
-<p align="center">
+<p>
   <a href="#methodology"><img alt="OWASP API Top 10 2023" src="https://img.shields.io/badge/methodology-OWASP%20API%20Top%2010%20(2023)-58A6FF"></a>
   <a href="#scope"><img alt="Target OWASP crAPI" src="https://img.shields.io/badge/target-OWASP%20crAPI-3776AB"></a>
   <a href="#findings-summary"><img alt="7 findings: 1 Critical, 2 High, 4 Medium" src="https://img.shields.io/badge/findings-7%20(1C%20%7C%202H%20%7C%204M)-F5A524"></a>
