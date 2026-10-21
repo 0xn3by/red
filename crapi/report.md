@@ -45,7 +45,7 @@ CVSS scores assume a **production** deployment and measure technical severity; t
 | F-004 | Unauthorized report download (`filename`) | API1 BOLA | 6.5 | Medium |
 | F-005 | Negative order quantity → free credit | API6 Business Flows | 6.5 | Medium |
 | F-006 | NoSQL injection in coupon validation | CWE-943 | 8.1 | High |
-| F-007 | SSRF via `mechanic_api` + token leak | API7 SSRF | 8.5 | High |
+| F-007 | SSRF via `mechanic_api` + token leak | API7 SSRF | 7.7 | High |
 
 ---
 
@@ -65,8 +65,8 @@ CVSS scores assume a **production** deployment and measure technical severity; t
 
 ### F-007 · SSRF via `mechanic_api`, with bearer-token leak
 
-- **Class:** API7 SSRF · **Severity:** 8.5 High
-- **CVSS:** `CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:L/A:N`
+- **Class:** API7 SSRF · **Severity:** 7.7 High
+- **CVSS:** `CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:N/A:N`
 - **Affected:** `POST /workshop/api/merchant/contact_mechanic` (`mechanic_api` field)
 - **What:** The endpoint fetches the attacker-supplied `mechanic_api` URL server-side with no allowlist, and forwards the caller's `Authorization` token.
 - **Repro:** Listen with `nc -lvnp 9000` → POST with `"mechanic_api":"http://172.17.0.1:9000/ssrf-test"`.
@@ -131,9 +131,9 @@ CVSS scores assume a **production** deployment and measure technical severity; t
 - **Class:** API6 Unrestricted Access to Sensitive Business Flows · **Severity:** 6.5 Medium
 - **CVSS:** `CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:N`
 - **Affected:** `POST /workshop/api/shop/orders`
-- **What:** The order flow computes `charge = price × quantity` without rejecting non-positive quantities, so a negative quantity adds credit.
-- **Repro:** Place an order with `quantity = -1` on a $10 item → charge −10 → credit +10.
-- **Evidence:** `credit:100.0` before → `credit:110.0` after an order. (`evidence.md` F-005)
+- **What:** Placing an order increased account credit instead of reducing it. The modelled cause is `charge = price × quantity` with no guard on non-positive quantity, so a negative quantity would add credit.
+- **Repro:** 1. Note credit = 100.0. 2. Place an order (modelled `quantity = -1`, $10 item → charge −10). 3. Credit = 110.0 (+10).
+- **Evidence:** `credit:100.0` before → `credit:110.0` after the order (#1177). (`evidence.md` F-005)
 - **Impact:** Any user can grant themselves unlimited store credit.
 - **Root cause:** No validation that quantity is a positive integer; charge not floored at 0.
 - **Fix:** Reject `quantity <= 0`; recompute price server-side; clamp `charge >= 0`.
