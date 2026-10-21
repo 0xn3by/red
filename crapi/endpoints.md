@@ -34,7 +34,7 @@ discovered.
 | GET  | `/workshop/api/mechanic/mechanic_report?report_id={id}` | int | Yes | Mechanic assigned / owner | finding (F-002) |
 | GET  | `/workshop/api/mechanic/download_report?filename={name}` | filename | Yes | Authorized report recipient | finding (F-004) |
 | GET  | `/workshop/api/merchant/service_requests/{VIN}` | VIN | Yes | Merchant / vehicle owner | untested |
-| POST | `/workshop/api/merchant/contact_mechanic` | none | Yes | Authenticated user | untested |
+| POST | `/workshop/api/merchant/contact_mechanic` | none | Yes | Authenticated user | finding (F-007) |
 | POST | `/workshop/api/shop/orders` | none | Yes | Authenticated user (self) | finding (F-005) |
 | GET  | `/workshop/api/shop/products?limit=&offset=` | none | Yes | Authenticated user | untested (exposes `credit`) |
 
