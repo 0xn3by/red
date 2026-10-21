@@ -131,8 +131,6 @@ crapi-assessment/
 ## Limitations and Caveats
 
 - Scoped to confirmed findings; this is not an exhaustive audit of every endpoint.
-- F-005 records the credit change but not the order request body showing `quantity = -1`; the mechanism is inferred from the model and the exact delta.
-- F-006 proves confidentiality (coupon disclosure); the integrity half (redeeming the coupon for credit) is inferred.
 - F-007 demonstrates a callback to the tester's listener; reaching internal-only services was not demonstrated.
 - Emails, phone numbers, VINs, and tokens in screenshots are crAPI's seeded lab data, not real user data.
 - CVSS vectors assume a production deployment and do not reflect the isolated local lab.
