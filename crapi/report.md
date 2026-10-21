@@ -82,12 +82,11 @@ CVSS scores assume a **production** deployment and measure technical severity; t
 - **Severity:** 8.1 High · **CVSS:** `CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N`
 - **Affected:** `POST /community/api/v2/coupon/validate-coupon`
 - **What:** `coupon_code` reaches a MongoDB query untyped; an operator object bypasses exact match.
-- **Repro:** `{"coupon_code":{"$ne":"x"}}` → 200 with a valid coupon.
-- **Evidence:** `{"coupon_code":"TRAC075","amount":"75",...}`. (`evidence.md` F-006)
-- **Impact:** Validation bypass → recover valid coupons and enumerate the coupon collection.
+- **Repro:** 1. `{"coupon_code":{"$ne":"x"}}` → 200, valid coupon `TRAC075` (amount 75). 2. Apply `TRAC075` → balance `$100 → $175` (+75).
+- **Evidence:** Injection returns `{"coupon_code":"TRAC075","amount":"75",...}`; applying the recovered coupon increases balance `$100 → $175`. (`evidence.md` F-006)
+- **Impact:** Validation bypass → recover valid coupons and redeem them for account credit (free money); the collection is enumerable via operator injection.
 - **Root cause:** User JSON used in a query without type validation.
 - **Fix:** Require `coupon_code` to be a string; reject non-string types; block operator injection in the driver/ODM.
-- **Caveat:** Confidentiality (C:H) proven; integrity (redeeming for credit) inferred.
 
 ### F-001 · IDOR on order details
 
@@ -131,13 +130,12 @@ CVSS scores assume a **production** deployment and measure technical severity; t
 - **Class:** API6 Unrestricted Access to Sensitive Business Flows · **Severity:** 6.5 Medium
 - **CVSS:** `CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:N`
 - **Affected:** `POST /workshop/api/shop/orders`
-- **What:** Placing an order increased account credit instead of reducing it. The modelled cause is `charge = price × quantity` with no guard on non-positive quantity, so a negative quantity would add credit.
-- **Repro:** 1. Note credit = 100.0. 2. Place an order (modelled `quantity = -1`, $10 item → charge −10). 3. Credit = 110.0 (+10).
-- **Evidence:** `credit:100.0` before → `credit:110.0` after the order (#1177). (`evidence.md` F-005)
+- **What:** The order flow computes `charge = price × quantity` without rejecting non-positive quantities, so a negative quantity adds credit instead of reducing it.
+- **Repro:** 1. Credit = 100.0. 2. `POST /workshop/api/shop/orders` with `{"product_id":2,"quantity":-1}` ($10 item → charge −10). 3. Response returns `credit:110.0` (+10).
+- **Evidence:** Order body `{"product_id":2,"quantity":-1}` → `200 {"message":"Order sent successfully.","credit":110.0}`; baseline credit 100.0. (`evidence.md` F-005)
 - **Impact:** Any user can grant themselves unlimited store credit.
 - **Root cause:** No validation that quantity is a positive integer; charge not floored at 0.
 - **Fix:** Reject `quantity <= 0`; recompute price server-side; clamp `charge >= 0`.
-- **Caveat:** Credit delta proven; the order body showing `quantity = -1` not yet captured.
 
 ---
 
