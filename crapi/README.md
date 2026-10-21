@@ -1,6 +1,6 @@
-<h1 align="center">crAPI API Penetration Test</h1>
+<h1>crAPI API Penetration Test</h1>
 
-<p align="center">
+<p>
   An authorized OWASP API Security Top 10 (2023) assessment of a self-hosted<br>
   OWASP crAPI instance, with reproducible evidence and CVSS 3.1 scoring.
 </p>
