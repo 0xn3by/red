@@ -1,0 +1,6 @@
+report.pdf
+scratch/
+research_notes/
+*.tmp
+.DS_Store
+node_modules/
