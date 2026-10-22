@@ -1,7 +1,7 @@
 <h1>red</h1>
 
 <p>
-  Offensive security lab work by Akash Govind (<code>0xn3by</code>):<br>
+  Offensive security lab work by Akash (<code>0xn3by</code>):<br>
   API penetration testing, secure code review, CTF walkthroughs, and privilege escalation, all against authorized labs.
 </p>
 
