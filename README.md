@@ -1,21 +1,17 @@
-<p align="center">
-  <img alt="red: offensive security lab work by Akash Govind (0xn3by)" src="assets/banner.svg" width="100%">
-</p>
+<h1>red</h1>
 
-<h1 align="center">red</h1>
-
-<p align="center">
+<p>
   Offensive security lab work by Akash Govind (<code>0xn3by</code>):<br>
   API penetration testing, secure code review, CTF walkthroughs, and privilege escalation, all against authorized labs.
 </p>
 
-<p align="center">
+<p>
   <a href="https://tryhackme.com/p/neby.tech"><img alt="TryHackMe profile neby.tech" src="https://img.shields.io/badge/TryHackMe-neby.tech-212C42?logo=tryhackme&logoColor=white"></a>
   <a href="https://medium.com/@0xaksh"><img alt="Medium @0xaksh" src="https://img.shields.io/badge/Medium-@0xaksh-000000?logo=medium&logoColor=white"></a>
   <a href="https://github.com/0xn3by"><img alt="GitHub 0xn3by" src="https://img.shields.io/badge/GitHub-0xn3by-181717?logo=github&logoColor=white"></a>
 </p>
 
-<p align="center">
+<p>
   <a href="#labs"><img alt="3 labs" src="https://img.shields.io/badge/labs-3-58A6FF"></a>
   <a href="crapi/report.md"><img alt="crAPI: 7 findings, 1 Critical, 2 High, 4 Medium" src="https://img.shields.io/badge/crAPI-7%20findings%20(1C%20%7C%202H%20%7C%204M)-F5A524"></a>
   <a href="owasp-nodegoat/report.md"><img alt="NodeGoat: 7 findings, 4 High, 3 Medium" src="https://img.shields.io/badge/NodeGoat-7%20findings%20(4H%20%7C%203M)-F5A524"></a>
