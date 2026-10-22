@@ -31,15 +31,17 @@
     <text x="66" y="210" font-size="112" font-weight="700" fill="#FF3B3B" letter-spacing="-2">red<tspan fill="#E6EDF3" font-weight="400">_</tspan></text>
 
     <text x="72" y="254" font-size="22" fill="#E6EDF3">Offensive security lab work · Akash Govind</text>
-    <text x="72" y="286" font-size="16" fill="#8B949E">API pentesting · OWASP API Top 10 · CTF walkthroughs · privilege escalation</text>
+    <text x="72" y="286" font-size="16" fill="#8B949E">API pentesting · secure code review · CTF walkthroughs · privesc</text>
   </g>
 
   <!-- right-side stat panel -->
   <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="16">
-    <rect x="852" y="132" width="364" height="150" rx="10" fill="#0D1117" fill-opacity="0.7" stroke="#30363D"/>
-    <text x="876" y="166" fill="#8B949E">[+]<tspan x="916" fill="#E6EDF3">crapi/</tspan><tspan x="1192" text-anchor="end" fill="#FF3B3B">7 findings</tspan></text>
-    <text x="916" y="194" fill="#8B949E">1C · 2H · 4M · CVSS 3.1</text>
-    <text x="876" y="234" fill="#8B949E">[+]<tspan x="916" fill="#E6EDF3">tryhackme/</tspan><tspan x="1192" text-anchor="end" fill="#FF3B3B">7 rooms</tspan></text>
-    <text x="916" y="262" fill="#8B949E">easy · medium · hard</text>
+    <rect x="852" y="76" width="364" height="212" rx="10" fill="#0D1117" fill-opacity="0.7" stroke="#30363D"/>
+    <text x="876" y="110" fill="#8B949E">[+]<tspan x="916" fill="#E6EDF3">crapi/</tspan><tspan x="1192" text-anchor="end" fill="#FF3B3B">7 findings</tspan></text>
+    <text x="916" y="136" fill="#8B949E">API pentest · 1C · 2H · 4M</text>
+    <text x="876" y="176" fill="#8B949E">[+]<tspan x="916" fill="#E6EDF3">owasp-nodegoat/</tspan><tspan x="1192" text-anchor="end" fill="#FF3B3B">7 findings</tspan></text>
+    <text x="916" y="202" fill="#8B949E">code review · 4H · 3M</text>
+    <text x="876" y="242" fill="#8B949E">[+]<tspan x="916" fill="#E6EDF3">tryhackme/</tspan><tspan x="1192" text-anchor="end" fill="#FF3B3B">7 rooms</tspan></text>
+    <text x="916" y="268" fill="#8B949E">easy · medium · hard</text>
   </g>
 </svg>
