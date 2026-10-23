@@ -1,0 +1,16 @@
+# Real captured failure responses from the Lab 1 session.
+# These are genuine. The successful 302 solve response was NOT captured
+# and must be reproduced; see 01-lab-exposed-key/README.md solve step.
+
+### Response: 401 on forged admin token (stale/wrong key -> signature rejected)
+HTTP/1.1 401 Unauthorized
+Set-Cookie: session=; Secure; HttpOnly; SameSite=None
+...
+Admin interface only available if logged in as an administrator
+
+### curl error: HTTP/2 negotiation failure (not an auth problem)
+curl: (16) Remote peer returned unexpected data while we expected SETTINGS frame. Perhaps, peer does not support HTTP/2 properly.
+
+### Response: 504 when the lab instance was asleep/expired
+HTTP/1.1 504 Gateway Timeout
+<h1>Server Error: Gateway Timeout (0) connecting to <lab-host></h1>
