@@ -12,9 +12,10 @@
 </p>
 
 <p>
-  <a href="#labs"><img alt="3 labs" src="https://img.shields.io/badge/labs-3-58A6FF"></a>
+  <a href="#labs"><img alt="4 labs" src="https://img.shields.io/badge/labs-4-58A6FF"></a>
   <a href="crapi/report.md"><img alt="crAPI: 7 findings, 1 Critical, 2 High, 4 Medium" src="https://img.shields.io/badge/crAPI-7%20findings%20(1C%20%7C%202H%20%7C%204M)-F5A524"></a>
   <a href="owasp-nodegoat/report.md"><img alt="NodeGoat: 7 findings, 4 High, 3 Medium" src="https://img.shields.io/badge/NodeGoat-7%20findings%20(4H%20%7C%203M)-F5A524"></a>
+  <a href="#portswigger"><img alt="PortSwigger: 2 JWT labs" src="https://img.shields.io/badge/PortSwigger-2%20JWT%20labs-FF6633"></a>
   <a href="#tryhackme"><img alt="7 TryHackMe rooms" src="https://img.shields.io/badge/TryHackMe-7%20rooms-FF3B3B"></a>
   <a href="#rules-of-engagement"><img alt="Authorized labs only" src="https://img.shields.io/badge/scope-authorized%20labs%20only-F5A524"></a>
 </p>
@@ -27,6 +28,7 @@ Everything in this repository was done against intentionally vulnerable labs, ei
 | --- | --- | --- | --- |
 | [`crapi/`](crapi/) | OWASP crAPI, self-hosted in Docker | API pentest against the OWASP API Security Top 10 (2023): 7 confirmed findings (1 Critical, 2 High, 4 Medium) covering BOLA, JWT alg:none bypass, SSRF, NoSQL injection, business-logic abuse, with CVSS 3.1 scores and screenshot evidence | [`crapi/report.md`](crapi/report.md) · [Medium write-up](https://medium.com/@0xaksh/how-i-found-7-vulnerabilities-in-owasp-crapi-and-the-reasoning-behind-each-one-6a12fdaa7943) |
 | [`owasp-nodegoat/`](owasp-nodegoat/) | OWASP NodeGoat source, commit `c5cb68a` | Manual source-to-sink secure code review against the OWASP Top 10 (2021): 7 findings (4 High, 3 Medium) covering SSJS `eval` injection, NoSQL `$where` injection, stored XSS, IDOR, missing function-level authz, CSRF, session misconfiguration, with line-exact permalinks and CVSS 3.1 scores | [`owasp-nodegoat/report.md`](owasp-nodegoat/report.md) |
+| [`port-swigger/`](port-swigger/) | [PortSwigger Web Security Academy](https://portswigger.net/web-security/jwt) | Two JWT authentication-bypass labs via algorithm confusion (RS256→HS256): Lab 1 reproduced byte-for-byte with captured evidence (JWK→PEM, forged HS256 admin token), Lab 2 a technique walkthrough (public-key recovery), plus root-cause notes, remediation, and a PyJWT vuln-vs-safe demo, with verified/textbook/unverified claim tagging | [`port-swigger/jwt/README.md`](port-swigger/jwt/README.md) |
 | [`tryhackme/`](tryhackme/) | [TryHackMe](https://tryhackme.com/p/neby.tech) rooms | Walkthroughs by difficulty (Easy/Medium/Hard): enumeration, exploitation, privilege escalation | [`tryhackme/Challenges/`](tryhackme/Challenges/) · [Profile](https://tryhackme.com/p/neby.tech) |
 
 ## crAPI
@@ -45,6 +47,15 @@ A manual secure code review of OWASP NodeGoat, tracing each vulnerability from a
 - **Follow the code:** [`owasp-nodegoat/code-reference.md`](owasp-nodegoat/code-reference.md) has verbatim source/sink snippets with permalinks to the pinned commit.
 - **Check the evidence:** [`owasp-nodegoat/evidence.md`](owasp-nodegoat/evidence.md) has the trace for each finding.
 
+## PortSwigger
+
+Two [PortSwigger Web Security Academy](https://portswigger.net/web-security/jwt) labs on JWT authentication bypass via **algorithm confusion** — flipping a token's `alg` from `RS256` to `HS256` so the server HMACs with its own public key. Claims are tagged `[Verified]` / `[Textbook]` / `[Unverified]` so captured facts are separated from theory.
+
+- **The concept:** [`port-swigger/jwt/00-concept/algorithm-confusion.md`](port-swigger/jwt/00-concept/algorithm-confusion.md) — why the public key becomes the HMAC secret.
+- **Lab 1 (exposed key):** [`port-swigger/jwt/01-lab-exposed-key/README.md`](port-swigger/jwt/01-lab-exposed-key/README.md) — full walkthrough, reproduced byte-for-byte, with real captured artifacts in [`evidence/`](port-swigger/jwt/01-lab-exposed-key/evidence/).
+- **Lab 2 (no exposed key):** [`port-swigger/jwt/02-lab-no-exposed-key/README.md`](port-swigger/jwt/02-lab-no-exposed-key/README.md) — technique walkthrough for recovering the public key from signed tokens.
+- **Defense & demo:** [`remediation.md`](port-swigger/jwt/03-defense/remediation.md) and a runnable PyJWT [`vuln_vs_safe.py`](port-swigger/jwt/demo/vuln_vs_safe.py).
+
 ## TryHackMe
 
 Room walkthroughs from my TryHackMe profile, [**neby.tech**](https://tryhackme.com/p/neby.tech).
@@ -61,7 +72,7 @@ Room walkthroughs from my TryHackMe profile, [**neby.tech**](https://tryhackme.c
 
 ## History
 
-`crapi/` and `tryhackme/` were merged in from their original repositories with full commit history preserved. `owasp-nodegoat/` was written directly in this repository. To see a lab's history, run `git log -- <folder>`, for example `git log -- crapi`.
+`crapi/`, `tryhackme/`, and `port-swigger/` were merged in from their original repositories with full commit history preserved. `owasp-nodegoat/` was written directly in this repository. To see a lab's history, run `git log -- <folder>`, for example `git log -- crapi`.
 
 ## Rules of Engagement
 
