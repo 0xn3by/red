@@ -1,0 +1,7 @@
+# react real xss-finding test cases checklist
+
+- dangerouslySetInnerHTML
+**by using** 
+>> grep -rn "dangerouslySetInnerHTML" src/
+
+- 
